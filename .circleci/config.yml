@@ -8,7 +8,8 @@ workflows:
       - aws-ecr/build_and_push_image:
           account-url: "${AWS_ECR_ACCOUNT_URL_ENV_VAR_NAME}"
           repo: "cicd"
-          region: $AWS_REGION_ENV_VAR_NAME
+          region: ${AWS_REGION_ENV_VAR_NAME}
+          context: my_aws
           tag: "${CIRCLE_SHA1}"
       - aws-ecs/deploy-service-update:
           requires:

@@ -1,6 +1,17 @@
 version: 2
+executors:
+  cli:
+    resource_class: small
+    docker:
+      - image: circleci/circleci-cli
+  node:
+    resource_class: small
+    docker:
+      - image: circleci/node
+
 orbs:
   aws-cli: circleci/aws-cli@0.1.4
+  circleci-cli: circleci/circleci-cli@0.1.2
 jobs:
   build: 
     Context: my_aws

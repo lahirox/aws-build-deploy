@@ -17,12 +17,6 @@ jobs:
           command: |
             docker build ./testproject -t cicd:${CIRCLE_SHA1}
       - run:
-          name: Test image
-          command: |
-            docker run -d -p 8080:8080 --name built-image cicd:${CIRCLE_SHA1}
-            sleep 10
-            docker run --network container:built-image appropriate/curl --retry 10 --retry-connrefused http://localhost:8080 | grep "Hello World!"
-      - run:
           name: Save image to an archive
           command: |
             mkdir docker-image

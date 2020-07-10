@@ -22,9 +22,7 @@ jobs:
             - docker-image
   deploy:  
     docker:
-      - image: circleci/python:3.6.1
-    environment:
-      AWS_DEFAULT_OUTPUT: json
+      - image: circleci/python:3.7.1
     steps:
       - checkout
       - setup_remote_docker

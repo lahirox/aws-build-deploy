@@ -2,6 +2,7 @@ version: 2
 jobs:
   build:  
     docker:
+    Context: my_aws
       - image: circleci/golang:1.8
     steps:
       - checkout

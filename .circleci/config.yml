@@ -15,7 +15,7 @@ jobs:
       - run:
           name: Build image
           command: |
-            docker build -f ./testproject -t cicd:${CIRCLE_SHA1}
+            docker build ./testproject -t cicd:${CIRCLE_SHA1}
       - run:
           name: Test image
           command: |

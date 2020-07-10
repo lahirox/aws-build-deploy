@@ -19,14 +19,14 @@ jobs:
       - run:
           name: Test image
           command: |
-            docker run -d -p 8080:8080 --name built-image cicd
+            docker run -d -p 8080:8080 --name built-image cicd:${CIRCLE_SHA1}
             sleep 10
             docker run --network container:built-image appropriate/curl --retry 10 --retry-connrefused http://localhost:8080 | grep "Hello World!"
       - run:
           name: Save image to an archive
           command: |
             mkdir docker-image
-            docker save -o docker-image/image.tar $FULL_IMAGE_NAME
+            docker save -o docker-image/image.tar cicd:${CIRCLE_SHA1}
       - persist_to_workspace:
           root: .
           paths:
@@ -58,12 +58,14 @@ jobs:
           command: |
             docker load --input workspace/docker-image/image.tar
       - run:
+          Context: my_aws
           name: Setup common environment variables
           command: |
             echo 'export ECR_REPOSITORY_NAME="${AWS_RESOURCE_NAME_PREFIX}"' >> $BASH_ENV
             echo 'export ECS_CLUSTER_NAME="${AWS_RESOURCE_NAME_PREFIX}-cluster"' >> $BASH_ENV
             echo 'export ECS_SERVICE_NAME="${AWS_RESOURCE_NAME_PREFIX}-service"' >> $BASH_ENV
       - run:
+          Context: my_aws
           name: Push image
           command: |
             . venv/bin/activate

@@ -15,7 +15,7 @@ jobs:
       - run:
           name: Build image
           command: |
-            docker build -t $FULL_IMAGE_NAME ./testproject
+            docker build -t ./testproject
       - run:
           name: Test image
           command: |

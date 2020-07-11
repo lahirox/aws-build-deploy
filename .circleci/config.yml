@@ -77,6 +77,14 @@ jobs:
             aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
       - run:
           Context: my_aws
+          name: create ECR repo
+          command: |
+            aws ecr create-repository \
+                --repository-name cicd \
+                --image-scanning-configuration scanOnPush=true \
+                --region us-east-1
+      - run:
+          Context: my_aws
           name: tag image
           command: |
             docker tag cicd:${CIRCLE_SHA1} ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/cicd:${CIRCLE_SHA1}

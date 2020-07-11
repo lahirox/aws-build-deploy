@@ -72,10 +72,13 @@ jobs:
             echo 'export ECS_SERVICE_NAME="${AWS_RESOURCE_NAME_PREFIX}-service"' >> $BASH_ENV
       - run:
           Context: my_aws
+          name: Login ECR
+          command: |
+            aws ecr get-login --region us-east-1 --no-include-email
+      - run:
+          Context: my_aws
           name: Push image
           command: |
-            . venv/bin/activate
-            eval $(aws ecr get-login --region us-east-1 --no-include-email)
             docker push ${'AWS_ACCOUNT_ID'}.dkr.ecr.us-east-1.amazonaws.com/$ECR_REPOSITORY_NAME:$CIRCLE_SHA1
 workflows:
   version: 2

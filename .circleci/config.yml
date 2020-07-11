@@ -41,7 +41,6 @@ jobs:
       - setup_remote_docker
       - attach_workspace:
           at: workspace
-      - aws-cli/install
       - aws-cli/configure:
           Context: my_aws
           aws-access-key-id: ${AWS_ACCESS_KEY_ID}

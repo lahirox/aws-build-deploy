@@ -41,11 +41,32 @@ jobs:
       - setup_remote_docker
       - attach_workspace:
           at: workspace
-      - aws-cli/configure:
-          Context: my_aws
-          aws-access-key-id: ${AWS_ACCESS_KEY_ID}
-          aws-secret-access-key: ${AWS_SECRET_ACCESS_KEY}
-          aws-region: ${AWS_DEFAULT_REGION}
+      - run:
+          name: Install aws cli
+          command: sudo pip install awscli
+      - run:
+          context: my_aws
+          command: |
+            aws configure set aws_access_key_id \
+              ${AWS_ACCESS_KEY_ID} \
+              --profile default
+          name: Configure AWS Secret Access Key
+      - run:
+          context: my_aws
+          command: |
+            aws configure set aws_secret_access_key \
+              ${AWS_SECRET_ACCESS_KEY} \
+              --profile default
+          name: Configure AWS Access Key ID
+      - when:
+          condition: true
+          steps:
+            - run:
+                context: my_aws
+                command: |
+                  aws configure set default.region ${AWS_DEFAULT_REGION} \
+                    --profile default
+                name: Configure AWS default region
       - run:
           name: Load image
           command: |

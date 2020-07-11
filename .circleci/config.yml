@@ -74,7 +74,7 @@ jobs:
           Context: my_aws
           name: Login ECR
           command: |
-            aws ecr get-login --region us-east-1 --no-include-email
+            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
       - run:
           Context: my_aws
           name: tag image

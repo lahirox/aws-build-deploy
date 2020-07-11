@@ -77,9 +77,14 @@ jobs:
             aws ecr get-login --region us-east-1 --no-include-email
       - run:
           Context: my_aws
+          name: tag image
+          command: |
+            docker tag cicd:${CIRCLE_SHA1} ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/cicd:${CIRCLE_SHA1}
+      - run:
+          Context: my_aws
           name: Push image
           command: |
-            docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/mytestcicd:${CIRCLE_SHA1}
+            docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/cicd:${CIRCLE_SHA1}
 workflows:
   version: 2
   build-deploy:

@@ -79,7 +79,7 @@ jobs:
           Context: my_aws
           name: Push image
           command: |
-            docker push ${'AWS_ACCOUNT_ID'}.dkr.ecr.us-east-1.amazonaws.com/$ECR_REPOSITORY_NAME:$CIRCLE_SHA1
+            docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/mytestcicd:${CIRCLE_SHA1}
 workflows:
   version: 2
   build-deploy:

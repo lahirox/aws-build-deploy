@@ -58,15 +58,12 @@ jobs:
               ${AWS_SECRET_ACCESS_KEY} \
               --profile default
           name: Configure AWS Access Key ID
-      - when:
-          condition: true
-          steps:
-            - run:
-                context: my_aws
-                command: |
+      - run:
+          context: my_aws
+          command: |
                   aws configure set default.region ${AWS_DEFAULT_REGION} \
                     --profile default
-                name: Configure AWS default region
+          name: Configure AWS default region
       - run:
           name: Load image
           command: |

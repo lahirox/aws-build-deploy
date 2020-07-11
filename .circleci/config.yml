@@ -82,6 +82,8 @@ workflows:
   build-deploy:
     jobs:
       - build
+          context: my_aws
       - deploy:
+          context: my_aws
           requires:
             - build

@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@0.1.4
   aws-ecs: circleci/aws-ecs@0.0.10
@@ -84,7 +84,7 @@ jobs:
           command: |
             docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/cicd:${CIRCLE_SHA1}
 workflows:
-  version: 2
+  version: 2.1
   build-deploy:
     jobs:
       - build
@@ -92,15 +92,14 @@ workflows:
           context: my_aws
           requires:
             - build
-      - aws-ecs/update-service:
-          orbs:
-            aws-cli: circleci/aws-cli@0.1.4
-            aws-ecs: circleci/aws-ecs@0.0.10
+  build-and-deploy:
+    jobs:
+      - aws-ecs/deploy-service-update:
           context: my_aws
           requires: 
             - deploy
-          family: cicd
-          cluster-name: cicd
+          family: 'cicd'
+          cluster-name: 'cicd'
           container-image-name-updates: "container=cicd,image-and-tag=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/cicd:${CIRCLE_SHA1}"
           container-env-var-updates: "container=cicd,name=VERSION_INFO,value=${CIRCLE_SHA1}_${CIRCLE_BUILD_NUM},container=cicd,name=BUILD_DATE,value=\"$(date)\""
           verify-revision-is-deployed: true

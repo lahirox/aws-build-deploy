@@ -92,10 +92,9 @@ workflows:
           context: my_aws
           requires:
             - build
-  build-and-deploy:
-    jobs:
       - aws-ecs/update-service:
-          requires: build-deploy
+          requires: 
+            - deploy
           family: cicd
           cluster-name: cicd
           container-image-name-updates: "container=cicd,image-and-tag=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/cicd:${CIRCLE_SHA1}"

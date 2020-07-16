@@ -1,17 +1,7 @@
-version: 2
-executors:
-  cli:
-    resource_class: small
-    docker:
-      - image: circleci/circleci-cli
-  node:
-    resource_class: small
-    docker:
-      - image: circleci/node
-
+version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@0.1.4
-  circleci-cli: circleci/circleci-cli@0.1.2
+  aws-ecs: circleci/aws-ecs@0.0.10
 jobs:
   build: 
     Context: my_aws
@@ -93,6 +83,12 @@ jobs:
           name: Push image
           command: |
             docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/cicd:${CIRCLE_SHA1}
+      - aws-ecs/update-service:
+          family: cicd
+          cluster-name: cicd
+          container-image-name-updates: "container=cicd,image-and-tag=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/cicd:${CIRCLE_SHA1}"
+          container-env-var-updates: "container=cicd,name=VERSION_INFO,value=${CIRCLE_SHA1}_${CIRCLE_BUILD_NUM},container=cicd,name=BUILD_DATE,value=\"$(date)\""
+          verify-revision-is-deployed: true
 workflows:
   version: 2
   build-deploy:

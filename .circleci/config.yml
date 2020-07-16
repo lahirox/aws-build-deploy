@@ -93,6 +93,10 @@ workflows:
           requires:
             - build
       - aws-ecs/update-service:
+          orbs:
+            aws-cli: circleci/aws-cli@0.1.4
+            aws-ecs: circleci/aws-ecs@0.0.10
+          context: my_aws
           requires: 
             - deploy
           family: cicd

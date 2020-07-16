@@ -83,12 +83,6 @@ jobs:
           name: Push image
           command: |
             docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/cicd:${CIRCLE_SHA1}
-      - aws-ecs/update-service:
-          family: cicd
-          cluster-name: cicd
-          container-image-name-updates: "container=cicd,image-and-tag=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/cicd:${CIRCLE_SHA1}"
-          container-env-var-updates: "container=cicd,name=VERSION_INFO,value=${CIRCLE_SHA1}_${CIRCLE_BUILD_NUM},container=cicd,name=BUILD_DATE,value=\"$(date)\""
-          verify-revision-is-deployed: true
 workflows:
   version: 2
   build-deploy:
@@ -98,3 +92,12 @@ workflows:
           context: my_aws
           requires:
             - build
+  build-and-deploy:
+    jobs:
+      - aws-ecs/update-service:
+          requires: build-deploy
+          family: cicd
+          cluster-name: cicd
+          container-image-name-updates: "container=cicd,image-and-tag=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/cicd:${CIRCLE_SHA1}"
+          container-env-var-updates: "container=cicd,name=VERSION_INFO,value=${CIRCLE_SHA1}_${CIRCLE_BUILD_NUM},container=cicd,name=BUILD_DATE,value=\"$(date)\""
+          verify-revision-is-deployed: true

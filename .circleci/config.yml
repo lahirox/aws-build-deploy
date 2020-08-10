@@ -81,6 +81,11 @@ jobs:
           name: Push image
           command: |
             docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/cicd:${CIRCLE_SHA1}
+      - run:
+          Context: my_aws
+          name: update taskdef
+          command: |
+            aws ecs register-task-definition --family cicd --container-definitions name=cicd,image=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/cicd:${CIRCLE_SHA1},cpu=256,memory=512
 workflows:
   version: 2
   build-deploy:
